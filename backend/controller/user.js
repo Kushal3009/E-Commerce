@@ -45,7 +45,7 @@ const login = async (req, res) => {
     // Check if user exists
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).json({ message: "User does not exist" });
+      return res.status(400).json({ message: "User Does not Exist" });
     }
 
     // Retrieve the salt and hashed password from the database
