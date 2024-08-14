@@ -11,14 +11,31 @@ const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false); // State for login modal
   const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false); // State for sign-up modal
+  const [opacity, setOpacity] = useState(0.5); // Initial opacity set to 0.5
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
+
   const showBackground = ['/', '/login', '/signup'].includes(location.pathname);
+
   useEffect(() => {
     const token = Cookies.get('token');
     setIsLoggedIn(!!token);
     const user = localStorage.getItem('user');
     setUsername(user);
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const scrollPosition = window.scrollY;
+      const newOpacity = Math.min(0.5 * 1+ scrollPosition / maxScroll); // Calculate opacity
+      setOpacity(newOpacity);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   const handleLogout = async () => {
@@ -57,30 +74,30 @@ const Navbar = () => {
   };
 
   return (
-    <div className="sticky top-0 left-0 right-0 bg-black bg-opacity-50 z-10">
+    <div className="sticky top-0 left-0 right-0 z-10" style={{ backgroundColor: `rgba(255, 255, 255, ${opacity})`, transition: 'background-color 0.3s ease-in-out' }}>
       <div className="flex items-center justify-between py-4 max-w-7xl mx-auto">
-        <div className="text-3xl font-bold text-white">
-          <Link to="/">E-Commerce</Link>
+        <div className="text-3xl font-bold text-black">
+          <Link to="/">AshapuriGas</Link>
         </div>
         <div>
           <ul className="flex gap-4 items-center">
             <li>
-              <Link to="/" className="text-xl font-semibold text-white hover:text-neon transition-colors duration-300">
+              <Link to="/" className="text-xl font-semibold hover:underline text-black hover:text-neon transition-colors duration-300">
                 Home
               </Link>
             </li>
             <li>
-              <Link to="/products" className="text-xl font-semibold text-white hover:text-neon transition-colors duration-300">
+              <Link to="/products" className="text-xl font-semibold hover:underline text-black hover:text-neon transition-colors duration-300">
                 Products
               </Link>
             </li>
             <li>
-              <Link to="/about" className="text-xl font-semibold text-white hover:text-neon transition-colors duration-300">
+              <Link to="/about" className="text-xl font-semibold hover:underline text-black hover:text-neon transition-colors duration-300">
                 About
               </Link>
             </li>
             <li>
-              <Link to="/contact" className="text-xl font-semibold text-white hover:text-neon transition-colors duration-300">
+              <Link to="/contact" className="text-xl font-semibold hover:underline text-black hover:text-neon transition-colors duration-300">
                 Contact
               </Link>
             </li>
@@ -91,18 +108,18 @@ const Navbar = () => {
             {isLoggedIn ? (
               <li className="relative">
                 <span
-                  className="text-xl font-semibold text-white cursor-pointer flex flex-row items-center gap-2"
+                  className="text-xl font-semibold text-black cursor-pointer flex flex-row items-center gap-2"
                   onClick={toggleDropdown}
                 >
                   {username} <FaAngleDown />
                 </span>
                 {isDropdownOpen && (
-                  <ul className={`absolute right-0 mt-2 w-20 ${showBackground ? "bg-white bg-opacity-10" : "bg-black"} border border-gray-200 rounded-md shadow-lg z-10`}>
-                    <li className={`block px-4 py-2 hover:bg-opacity-30 text-white hover:bg-gray-200 ${showBackground ? "hover:text-black" : ""} cursor-pointer text-center`}>
+                  <ul className={`absolute right-0 mt-2 w-24 ${showBackground ? "bg-white bg-opacity-10" : "bg-black"} border border-gray-200 rounded-md shadow-lg z-10`}>
+                    <li className={`block px-4 py-2 hover:bg-opacity-30 text-white text-xl hover:font-bold font-semibold text-center hover:bg-gray-200 ${showBackground ? "hover:text-black" : ""} cursor-pointer text-center`}>
                       <Link to="/profile">Profile</Link>
                     </li>
                     <li
-                      className={`block px-4 py-2 text-white hover:bg-gray-200 hover:bg-opacity-30 cursor-pointer text-center ${showBackground ? "hover:text-black" : ""}`}
+                      className={`block px-4 py-2 text-white text-xl hover:font-bold font-semibold hover:bg-gray-200 hover:bg-opacity-30 cursor-pointer text-center ${showBackground ? "hover:text-black" : ""}`}
                       onClick={handleLogout}
                     >
                       Logout
@@ -116,7 +133,7 @@ const Navbar = () => {
                   <button
                     onClick={() => setIsLoginModalOpen(true)} // Open the login modal
                     type="button"
-                    className="relative flex justify-center w-full px-4 py-2 text-lg font-semibold text-white border border-white bg-gradient-to-r from-neon to-neon-hover rounded-md group transition-colors duration-300 ease-in-out hover:from-neon-hover hover:to-neon-hover hover:bg-white hover:bg-opacity-50 hover:text-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neon"
+                    className="relative flex justify-center w-full px-4 py-2 text-lg font-semibold text-black border border-white bg-gradient-to-r from-neon to-neon-hover rounded-md group transition-colors duration-300 ease-in-out hover:from-neon-hover hover:to-neon-hover hover:bg-black hover:bg-opacity-50 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neon"
                   >
                     Login
                   </button>
@@ -125,7 +142,7 @@ const Navbar = () => {
                   <button
                     onClick={() => setIsSignUpModalOpen(true)} // Open the sign-up modal
                     type="button"
-                    className="relative flex justify-center w-full px-4 py-2 text-lg font-semibold text-white border border-white bg-gradient-to-r from-neon to-neon-hover rounded-md group transition-colors duration-300 ease-in-out hover:from-neon-hover hover:to-neon-hover hover:bg-white hover:bg-opacity-50 hover:text-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neon"
+                    className="relative flex justify-center w-full px-4 py-2 text-lg font-semibold text-black border border-white bg-gradient-to-r from-neon to-neon-hover rounded-md group transition-colors duration-300 ease-in-out hover:from-neon-hover hover:to-neon-hover hover:bg-black hover:bg-opacity-50 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neon"
                   >
                     Sign Up
                   </button>

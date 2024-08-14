@@ -6,6 +6,9 @@ import About from './components/About';
 import SignUp from './components/SignUp';
 import Login from './components/Login';
 import gas from '/gas.jpeg'; // Import the background image
+import Product from './components/Product';
+import Products from './components/Products';
+import Footer from './components/Footer';
 
 const App = () => {
   const location = useLocation();
@@ -28,7 +31,7 @@ const App = () => {
   };
 
   return (
-    <div className={`min-h-screen ${showBackground ? 'bg-cover bg-center' : ''}`} style={showBackground ? { backgroundImage: `url(${gas})` } : {}}>
+    <div className={`min-h-screen ${showBackground ? 'bg-cover bg-opacity-0 bg-center' : ''}`} style={showBackground ? { backgroundImage: `url(${gas})` } : {}}>
       <Navbar openSignUp={openSignUp} openLogin={openLogin} />
 
       {/* Alert display */}
@@ -41,6 +44,8 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
+        <Route path="/product" element={<Product />} />
+        <Route path="/products" element={<Products />} />
       </Routes>
 
       {/* Modal components */}
@@ -65,6 +70,7 @@ const App = () => {
           />
         </Modal>
       )}
+      <Footer/>
     </div>
   );
 };

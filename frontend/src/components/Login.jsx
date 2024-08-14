@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import { useSpring, animated } from "react-spring";
-import { Link } from "react-router-dom";
-import "./Login.css"; // Ensure you create and style this CSS file
 
 const Login = ({ onClose, onSwitchToSignUp }) => { // Added onSwitchToSignUp prop
   const fadeIn = useSpring({
