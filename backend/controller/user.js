@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const User = require("../models/User.js");
 const { createHmac, randomBytes } = require("crypto");
 const secret = process.env.SECRET;
-
+User.fin
 const createUser = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {

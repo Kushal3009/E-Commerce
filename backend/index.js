@@ -7,6 +7,7 @@ require("dotenv").config();
 const port = process.env.PORT || 3000;
 const url = process.env.MONGO_URL;
 const User = require("./routes/user.js");
+const Product = require("./routes/product.js");
 
 // Connection with Database
 connectMongo(url);
@@ -23,6 +24,7 @@ app.use(express.json());
 
 // Use the User routes
 app.use("/user", User);
+app.use("/product", Product);
 
 app.get("/", (req, res) => {
   res.send("Hello World!");

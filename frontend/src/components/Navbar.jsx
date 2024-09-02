@@ -133,7 +133,7 @@ const Navbar = () => {
                   <button
                     onClick={() => setIsLoginModalOpen(true)} // Open the login modal
                     type="button"
-                    className="relative flex justify-center w-full px-4 py-2 text-lg font-semibold text-black border border-white bg-gradient-to-r from-neon to-neon-hover rounded-md group transition-colors duration-300 ease-in-out hover:from-neon-hover hover:to-neon-hover hover:bg-black hover:bg-opacity-50 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neon"
+                    className="relative flex justify-center w-full px-4 py-2 text-lg font-semibold text-black border border-black bg-gradient-to-r from-neon to-neon-hover rounded-md group transition-colors duration-300 ease-in-out hover:from-neon-hover hover:to-neon-hover hover:bg-black hover:bg-opacity-50 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neon"
                   >
                     Login
                   </button>
@@ -142,7 +142,7 @@ const Navbar = () => {
                   <button
                     onClick={() => setIsSignUpModalOpen(true)} // Open the sign-up modal
                     type="button"
-                    className="relative flex justify-center w-full px-4 py-2 text-lg font-semibold text-black border border-white bg-gradient-to-r from-neon to-neon-hover rounded-md group transition-colors duration-300 ease-in-out hover:from-neon-hover hover:to-neon-hover hover:bg-black hover:bg-opacity-50 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neon"
+                    className="relative flex justify-center w-full px-4 py-2 text-lg font-semibold text-black border border-black bg-gradient-to-r from-neon to-neon-hover rounded-md group transition-colors duration-300 ease-in-out hover:from-neon-hover hover:to-neon-hover hover:bg-black hover:bg-opacity-50 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neon"
                   >
                     Sign Up
                   </button>
