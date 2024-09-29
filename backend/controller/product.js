@@ -81,23 +81,23 @@ const getProduct = async (req, res) => {
 
 
 const getAllProduct = async (req, res) => {
-    try {
-      // Fetch all products where is_visible is true
-      const products = await Product.find({ is_visible: true });
-  
-      // If no products are found, return a 404 status
-      if (products.length === 0) {
-        return res.status(404).json({ message: "No visible products found" });
-      }
-  
-      // Return the list of visible products
-      res.json(products);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: "Error fetching products", error });
+  try {
+    // Fetch all products where is_visible is true
+    const products = await Product.find({ });
+
+    // If no products are found, return a 404 status
+    if (products.length === 0) {
+      return res.status(404).json({ message: "No visible products found" });
     }
-  };
-  
+
+    // Return the list of visible products
+    res.json(products);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error fetching products", error });
+  }
+};
+
 
 module.exports = {
   createProduct,

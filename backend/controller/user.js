@@ -60,10 +60,11 @@ const login = async (req, res) => {
     if (hash === hashedPassword) {
       const payload = {
         user: user.username,
+        id:user._id
       }
       const token = jwt.sign(payload,secret)
       res.cookie('token',token)
-      return res.status(200).json({ message: "Login successful",username: user.username});
+      return res.status(200).json({ message: "Login successful",username: user.username, token: token });
     } else {
       return res.status(400).json({ message: "Invalid password" });
     }

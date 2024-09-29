@@ -1,7 +1,7 @@
 // ProductSortList.js
 import React from 'react';
 
-const categories = ['All', 'Gas Stove', 'Geyser', 'Mixture', 'Other'];
+const categories = ['All', 'audio', 'gaming', 'mobile', 'tv'];
 
 const ProductSortList = ({ selectedCategory, setSelectedCategory }) => {
   return (

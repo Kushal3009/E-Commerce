@@ -1,18 +1,21 @@
-// middleware/checkAuth.js
 const jwt = require('jsonwebtoken');
 
 const authenticateToken = (req, res, next) => {
-  if (!req.cookies) return res.sendStatus(400); // Bad Request
+  const token = req.cookies?.token; // Ensure you're correctly accessing cookies
 
-  const token = req.cookies.token;
+  if (!token) {
+    return res.status(401).json({ error: 'Token missing or invalid' }); // Unauthorized
+  }
 
-  if (token == null) return res.sendStatus(401); // Unauthorized
+  jwt.verify(token, process.env.SECRET, (err, decoded) => {
+    if (err) {
+      return res.status(403).json({ error: 'Token verification failed' }); // Forbidden
+    }
 
-  jwt.verify(token, process.env.SECRET, (err, user) => {
-    if (err) return res.sendStatus(403); // Forbidden
-    req.user = user;
+    req.userId = decoded.id; // Store user ID in request object
     next();
   });
 };
+
 
 module.exports = authenticateToken;
