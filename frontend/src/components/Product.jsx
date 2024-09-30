@@ -58,9 +58,14 @@ const Product = () => {
             </div>
             <div className="flex gap-3">
               <div className="text-2xl font-bold py-2">$58.00</div>
-              <button className="bg-blue-500 text-white px-3 rounded text-xl py-2">
-                Add to Cart
-              </button>
+              <div >
+                <button className="bg-blue-500 text-white px-3 rounded text-xl py-2">
+                  Add to Cart
+                </button>
+                <button className="bg-blue-500 text-white px-3 rounded text-xl py-2">
+                  Buy
+                </button>
+              </div>
             </div>
           </div>
         </div>

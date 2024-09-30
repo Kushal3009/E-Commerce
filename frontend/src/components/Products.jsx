@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import ProductSortList from "./ProductSortList";
+import Cookies from 'js-cookie';
+
 
 const Products = () => {
   const [products, setProducts] = useState([]);  // State to store products
   const [loading, setLoading] = useState(true);  // State to handle loading
   const [error, setError] = useState(null);      // State to handle errors
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const [isAddingToCart, setIsAddingToCart] = useState(false);
 
 
   // Fetch products from the backend when the component mounts
@@ -34,27 +35,31 @@ const Products = () => {
 
   // Function to handle adding product to cart
   const handleAddToCart = async (productId) => {
-    setIsAddingToCart(true);  // Set loading state
     try {
-      const response = await fetch(`http://localhost:3000/cart/addToCart/${productId}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include'  // Include credentials (cookies) in the request
-      });
+      const token = Cookies.get('token');  // Get the token from the cookie
+      if (token) {
 
-      if (!response.ok) {
-        throw new Error('Failed to add product to cart');
+        const response = await fetch(`http://localhost:3000/cart/addToCart/${productId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include'  // Include credentials (cookies) in the request
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to add product to cart');
+        }
+
+        const data = await response.json(); // Get response data
+        alert(data.msg); // Use the message from response
+      } else {
+        alert('Please login to add products to cart')
       }
 
-      const data = await response.json(); // Get response data
-      alert(data.msg); // Use the message from response
     } catch (err) {
       console.error(err.message);
       alert('Error adding product to cart');
-    } finally {
-      setIsAddingToCart(false);  // Reset loading state
     }
   };
 
@@ -121,15 +126,22 @@ const Products = () => {
                 </div>
 
                 {/* Add to Cart Button */}
-                <button
-                  className={`bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-500 w-full ${isAddingToCart ? 'opacity-50 cursor-not-allowed' : ''}`}
-                  onClick={() => handleAddToCart(product._id)}
-                  disabled={isAddingToCart} // Disable while adding
-                >
-                  {isAddingToCart ? 'Adding...' : 'Add to Cart'}
-                </button>
-
+                <div className="flex gap-2">
+                  <button
+                    className={`bg-green-600 text-white py-2 px-4 rounded hover:bg-green-500 w-full`}
+                    onClick={() => handleAddToCart(product._id)}
+                  // Disable while adding
+                  >
+                    Add to Cart</button>
+                  <button
+                    className={`bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-500 w-full`}
+                    onClick={() => handleAddToCart(product._id)}
+                  // Disable while adding
+                  >
+                    Buy</button>
+                </div>
               </div>
+
             </div>
           ))}
         </div>

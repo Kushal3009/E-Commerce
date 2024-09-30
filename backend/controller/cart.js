@@ -24,6 +24,25 @@ const addToCart = async (req, res) => {
     }
 };
 
+
+const removeFromCart = async (req, res) => {
+    try {
+        const cartId = req.params.id;
+        const userId = req.userId;
+        const cartItem = await Cart.findOneAndDelete({ user: userId, _id: cartId });
+
+        if (!cartItem) {
+            return res.status(404).json({ message: "Product not found in cart" });
+        }
+
+        res.json({ message: "Product removed from cart successfully" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Failed to remove product from cart" });
+    }
+}
+
+
 const getAllCart = async (req, res) => {
     const userId = req.userId; // Get the user ID from the token
 
@@ -35,7 +54,7 @@ const getAllCart = async (req, res) => {
         const products = cartItems.map(item => item.product);
 
         // Send the retrieved product details as a response
-        res.json(products);
+        res.json(cartItems);
     } catch (err) {
         console.error(err); // Log the error for debugging
         res.status(500).json({ error: "Failed to retrieve cart items" }); // Send an error response
@@ -43,4 +62,4 @@ const getAllCart = async (req, res) => {
 }
 
 
-module.exports = { addToCart, getAllCart };
+module.exports = { addToCart, getAllCart, removeFromCart };

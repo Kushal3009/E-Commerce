@@ -83,7 +83,7 @@ const getProduct = async (req, res) => {
 const getAllProduct = async (req, res) => {
   try {
     // Fetch all products where is_visible is true
-    const products = await Product.find({ });
+    const products = await Product.find({});
 
     // If no products are found, return a 404 status
     if (products.length === 0) {
