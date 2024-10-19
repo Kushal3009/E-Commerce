@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { FaAngleDown, FaCartArrowDown } from "react-icons/fa";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { FaCartArrowDown } from "react-icons/fa";
 import Cookies from "js-cookie";
 import Modal from "./Modal";
 import Login from "./Login";
@@ -14,8 +14,10 @@ const Navbar = () => {
   const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false); // State for sign-up modal
   const [isCartOpen, setIsCartOpen] = useState(false); // State to manage cart open/close
   const [username, setUsername] = useState("");
+  const [navbarOpacity, setNavbarOpacity] = useState(1); // Default opacity 1 (no effect)
 
   const navigate = useNavigate();
+  const location = useLocation(); // Get the current route location
 
   useEffect(() => {
     const token = Cookies.get("token");
@@ -23,6 +25,26 @@ const Navbar = () => {
     const user = localStorage.getItem("user");
     setUsername(user);
   }, []);
+
+  // Scroll event listener for changing navbar opacity (only on route '/')
+  useEffect(() => {
+    if (location.pathname === "/") {
+      const handleScroll = () => {
+        const scrollY = window.scrollY;
+        const newOpacity = Math.min(1, 0.1 + scrollY / 200); // Adjust the opacity based on scroll
+        setNavbarOpacity(newOpacity);
+      };
+
+      window.addEventListener("scroll", handleScroll);
+
+      // Cleanup listener when component unmounts or location changes
+      return () => {
+        window.removeEventListener("scroll", handleScroll);
+      };
+    } else {
+      setNavbarOpacity(1); // Reset opacity to 1 for other routes
+    }
+  }, [location.pathname]);
 
   const handleLogout = async () => {
     try {
@@ -64,7 +86,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="sticky top-0 left-0 right-0 z-10 bg-white">
+    <div className="sticky top-0 left-0 right-0 z-10" style={{ backgroundColor: `rgba(255, 255, 255, ${navbarOpacity})` }}>
       <div className="flex items-center justify-between py-4 max-w-7xl mx-auto">
         <div className="text-3xl font-bold text-black">
           <Link to="/">AshapuriGas</Link>
@@ -106,40 +128,40 @@ const Navbar = () => {
           </ul>
         </div>
         <div>
-          <ul className="flex gap-4 items-center">
-            {isLoggedIn && (
-              <li className="font-semibold text-black cursor-pointer text-3xl p-1 hover:scale-105 hover:transition-transform hover:hue-rotate-180 " onClick={toggleCart}>
+          <ul className="flex items-center">
+            {isLoggedIn && location.pathname !== '/order-summary' && (
+              <li
+                className="font-semibold text-black cursor-pointer text-3xl p-1 hover:scale-105 hover:transition-transform hover:hue-rotate-180"
+                onClick={toggleCart}
+              >
                 <FaCartArrowDown /> {/* Cart Icon */}
               </li>
             )}
             {isLoggedIn ? (
-              <li className="relative">
-                <span
-                  className="text-xl font-semibold text-black cursor-pointer flex flex-row items-center gap-2"
-                  onClick={toggleDropdown}
-                >
-                  {username} <FaAngleDown />
+              <li className="flex items-center gap-2">
+                <span className="text-xl font-semibold text-black cursor-pointer">
+                  {username}
                 </span>
-                {isDropdownOpen && (
-                  <ul className="absolute right-0 mt-2 w-24 bg-gray-200 border border-gray-200 rounded-md shadow-lg z-10">
-                    <li className="block px-4 py-2 text-black text-xl hover:text-gray-200 hover:bg-black cursor-pointer">
-                      <Link to="/profile">Profile</Link>
-                    </li>
-                    <li
-                      className="block px-4 py-2 text-black text-xl hover:text-gray-200 hover:bg-black cursor-pointer"
-                      onClick={handleLogout}
-                    >
-                      Logout
-                    </li>
-                  </ul>
-                )}
+                <Link
+                  to="/profile"
+                  className="text-xl text-black border border-3 border-black hover:text-gray-200 hover:bg-black px-4 py-2 rounded-md cursor-pointer"
+                >
+                  Profile
+                </Link>
+                <span
+                  className="text-xl text-black border border-3 border-black hover:text-gray-200 hover:bg-black px-4 py-2 rounded-md cursor-pointer"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </span>
               </li>
+
             ) : (
               <>
                 <li>
                   <button
                     onClick={() => setIsLoginModalOpen(true)}
-                    className="relative flex justify-center w-full px-4 py-2 text-lg font-semibold text-black border border-black bg-gradient-to-r from-neon to-neon-hover rounded-md group transition-colors duration-300 ease-in-out hover:from-neon-hover hover:to-neon-hover hover:bg-black hover:bg-opacity-50 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neon"
+                    className="text-xl text-black border border-3 border-black hover:text-gray-200 hover:bg-black px-4 py-2 rounded-md cursor-pointer"
                   >
                     Login
                   </button>
@@ -147,7 +169,7 @@ const Navbar = () => {
                 <li>
                   <button
                     onClick={() => setIsSignUpModalOpen(true)}
-                    className="relative flex justify-center w-full px-4 py-2 text-lg font-semibold text-black border border-black bg-gradient-to-r from-neon to-neon-hover rounded-md group transition-colors duration-300 ease-in-out hover:from-neon-hover hover:to-neon-hover hover:bg-black hover:bg-opacity-50 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neon"
+                    className="text-xl text-black border border-3 border-black hover:text-gray-200 hover:bg-black px-4 py-2 rounded-md cursor-pointer"
                   >
                     Sign Up
                   </button>

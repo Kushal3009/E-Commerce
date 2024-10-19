@@ -9,6 +9,8 @@ import gas from '/gas.jpeg'; // Import the background image
 import Product from './components/Product';
 import Products from './components/Products';
 import Footer from './components/Footer';
+import OrderSummary from './components/OrderSummary';
+
 
 const App = () => {
   const location = useLocation();
@@ -46,6 +48,8 @@ const App = () => {
         <Route path="/about" element={<About />} />
         <Route path="/product" element={<Product />} />
         <Route path="/products" element={<Products />} />
+        <Route path="/product/:productId" element={<Product />} />
+        <Route path="/order-summary" element={<OrderSummary />} />
       </Routes>
 
       {/* Modal components */}

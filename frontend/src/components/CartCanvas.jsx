@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const CartCanvas = ({ isOpen, toggleCart }) => {
     const [cartItems, setCartItems] = useState([]); // State to store cart items
-
+    const navigate = useNavigate();
     useEffect(() => {
         const fetchCartItems = async () => {
             if (isOpen) {
@@ -27,7 +28,8 @@ const CartCanvas = ({ isOpen, toggleCart }) => {
         fetchCartItems(); // Call the async function
     }, [isOpen]);
 
-    const handleQuantityChange = (itemId, change) => {
+    const handleQuantityChange = async (itemId, change) => {
+        // Update the quantity in the local state
         setCartItems((prevItems) =>
             prevItems.map((item) => {
                 if (item._id === itemId) {
@@ -37,6 +39,27 @@ const CartCanvas = ({ isOpen, toggleCart }) => {
                 return item;
             })
         );
+
+        // Update the quantity in the database
+        try {
+            const response = await fetch(`http://localhost:3000/cart/updateQuantity/${itemId}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ change }), // Send the change (increment or decrement)
+                credentials: "include", // Include cookies in the request
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to update quantity");
+            }
+
+            const data = await response.json(); // You can use the updated cart data from the response if needed
+            alert("Quantity updated Successfully");
+        } catch (error) {
+            console.error("Error updating quantity:", error);
+        }
     };
 
     const handleRemoveItem = async (itemId) => {
@@ -58,33 +81,15 @@ const CartCanvas = ({ isOpen, toggleCart }) => {
         }
     };
 
-
     const handleBuyNow = async () => {
-        try {
-            // Implement the purchase logic here
-            const response = await fetch("http://localhost:3000/cart/buy", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(cartItems), // Send the cart items to the backend for processing
-                credentials: "include", // Include cookies in the request
-            });
+        // Close the cart canvas
+        toggleCart();
 
-            if (!response.ok) {
-                throw new Error("Failed to proceed with purchase");
-            }
-
-            // Handle successful purchase (e.g., show a success message, redirect, etc.)
-            alert("Purchase successful!");
-
-            // Clear the cart after purchase
-            setCartItems([]);
-        } catch (error) {
-            console.error("Error during purchase:", error);
-            alert("Failed to proceed with purchase.");
-        }
+        // Navigate to the order summary page, passing the cart items
+        navigate('/order-summary', { state: { cartItems } });
     };
+
+
 
     return (
         <>
@@ -115,7 +120,7 @@ const CartCanvas = ({ isOpen, toggleCart }) => {
                                     </div>
                                 </div>
                                 <img src={item.product.image} alt={item.product.title} className="w-16 h-16 object-cover" />
-                                
+
                                 <button onClick={() => handleRemoveItem(item._id)} className="ml-4 text-red-500 hover:text-red-700">Remove</button>
                             </div>
                         ))
@@ -133,7 +138,6 @@ const CartCanvas = ({ isOpen, toggleCart }) => {
                         )}
                     </div>
                 </div>
-
             </div>
         </>
     );

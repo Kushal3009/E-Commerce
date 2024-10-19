@@ -62,4 +62,35 @@ const getAllCart = async (req, res) => {
 }
 
 
-module.exports = { addToCart, getAllCart, removeFromCart };
+const updateQuantity = async (req, res) => {
+    const itemId = req.params.id;
+    console.log(itemId);
+    const { change } = req.body;
+
+    try {
+        // Fetch the cart item by ID
+        const cartItem = await Cart.findById(itemId);
+
+        if (!cartItem) {
+            return res.status(404).json({ message: "Item not found" });
+        }
+
+        // Update the quantity
+        cartItem.quantity += change;
+
+        // Prevent quantity from going below 1
+        if (cartItem.quantity < 1) {
+            cartItem.quantity = 1;
+        }
+
+        // Save the updated item back to the database
+        await cartItem.save();
+
+        res.json({ message: "Quantity updated successfully", cartItem });
+    } catch (error) {
+        console.error("Error updating quantity:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+module.exports = { addToCart, getAllCart, removeFromCart, updateQuantity };
